@@ -35,6 +35,9 @@ export type AuditEntry = {
   timestamp: string
   action: string
   result: string
+  authorization_result?: string
+  permanence_score?: number | null
+  dmrv_validity?: 'valid' | 'invalid' | 'unknown'
 }
 
 export type TokenRecord = {

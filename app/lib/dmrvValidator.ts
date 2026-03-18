@@ -16,19 +16,32 @@ export function validateDmrvData(dmrvData: JsonValue): DmrvValidationResult {
     }
   }
 
-  const requiredFields = ['methodologyId', 'periodStart', 'periodEnd', 'activityData', 'evidenceRef']
-  for (const field of requiredFields) {
-    if (!(field in record)) issues.push(`Missing required dMRV field: ${field}`)
+  const methodologyValue = record.methodologyId ?? record.methodology
+  if (typeof methodologyValue !== 'string' || methodologyValue.trim().length < 3) {
+    issues.push('Missing required dMRV field: methodologyId or methodology')
   }
 
-  const activityData = record.activityData
-  if (typeof activityData !== 'number' || Number.isNaN(activityData) || activityData <= 0) {
-    issues.push('activityData must be a positive number.')
+  if (!('periodStart' in record)) issues.push('Missing required dMRV field: periodStart')
+  if (!('periodEnd' in record)) issues.push('Missing required dMRV field: periodEnd')
+
+  const activityCandidates = [
+    record.activityData,
+    record.co2_reduction_tons,
+    record.co2e_reduction_tons,
+    record.soil_carbon_increase_tons,
+  ]
+  const hasPositiveActivity = activityCandidates.some(
+    (value) => typeof value === 'number' && !Number.isNaN(value) && value > 0,
+  )
+  if (!hasPositiveActivity) {
+    issues.push(
+      'Missing positive activity metric: activityData, co2_reduction_tons, co2e_reduction_tons, or soil_carbon_increase_tons.',
+    )
   }
 
-  const evidenceRef = record.evidenceRef
-  if (typeof evidenceRef !== 'string' || evidenceRef.trim().length < 3) {
-    issues.push('evidenceRef must be a non-empty string.')
+  const evidenceValue = record.evidenceRef ?? record.evidence
+  if (typeof evidenceValue !== 'string' || evidenceValue.trim().length < 3) {
+    issues.push('Missing required dMRV field: evidenceRef or evidence')
   }
 
   return { valid: issues.length === 0, issues }

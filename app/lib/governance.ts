@@ -10,6 +10,8 @@ const ELIGIBLE_SECTORS = new Set([
   'logistics',
 ])
 
+const MINIMUM_PERMANENCE_SCORE = 55
+
 export function checkSectorEligibility(sector: Sector): { eligible: boolean; reason?: string } {
   const eligible = ELIGIBLE_SECTORS.has(sector.name.toLowerCase())
   if (!eligible) {
@@ -31,8 +33,8 @@ export function authorizeProject(
     return { authorized: false, reason: 'dMRV validation failed.' }
   }
 
-  if (permanenceScore < 60) {
-    return { authorized: false, reason: 'Permanence score below threshold (60).' }
+  if (permanenceScore < MINIMUM_PERMANENCE_SCORE) {
+    return { authorized: false, reason: `Permanence score below threshold (${MINIMUM_PERMANENCE_SCORE}).` }
   }
 
   return { authorized: true }

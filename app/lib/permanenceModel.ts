@@ -6,6 +6,11 @@ export function calculatePermanenceScore(dmrvData: JsonValue): number {
   if (typeof dmrvData !== 'object' || dmrvData === null || Array.isArray(dmrvData)) return 0
 
   const record = dmrvData as Record<string, JsonValue>
+  const explicitScore = Number(record.permanenceScore ?? Number.NaN)
+  if (!Number.isNaN(explicitScore)) {
+    return Math.round(Math.max(0, Math.min(100, explicitScore)))
+  }
+
   const storageYears = Number(record.storageYears ?? 0)
   const reversalBufferPct = Number(record.reversalBufferPct ?? 0)
   const monitoringStrength = String(record.monitoringStrength ?? 'standard')

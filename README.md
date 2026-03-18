@@ -47,12 +47,34 @@ tsconfig.json
   - `admin.ts` (admin user list + role updates)
 - **Data (`supabase`)**:
   - `schema.sql` tables + RLS policies + profile trigger
-  - `seed.sql` sector and demo records
+  - `seed.sql` sector and Austrian example records
+
+## Preloaded example projects
+
+After running `schema.sql` and `seed.sql`, the database contains three preloaded projects:
+
+1. **Holcim - Klinkerfaktor-Reduktion 2026**
+   - Sector: `cement`
+   - Permanence score: `65`
+   - Authorized: `true`
+   - Token: `AT-CEMENT-2026-001-HLCM`
+2. **RWA - Humusaufbau Pilotregion Marchfeld**
+   - Sector: `agriculture`
+   - Permanence score: `82`
+   - Authorized: `true`
+   - Token: `AT-AGRI-2026-014-RWA-HUMUS`
+3. **Verbund - Biomasse Effizienzsteigerung 2026**
+   - Sector: `energy`
+   - Permanence score: `58`
+   - Authorized: `true`
+   - Token: `AT-ENERGY-2026-009-VERBUND-BIO`
+
+For each project, `seed.sql` also inserts audit entries for both authorization and minting.
 
 ## Supabase setup
 
 1. Create a Supabase project.
-2. Run SQL scripts in order:
+2. Run SQL scripts in order (mandatory):
    1. `supabase/schema.sql`
    2. `supabase/seed.sql`
 3. In Supabase Authentication, create users (example):
@@ -151,7 +173,7 @@ npm run build
 
 1. Push repository to GitHub.
 2. Import project in Vercel.
-3. Add env vars:
+3. Add env vars (Production, Preview, Development):
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
    - `SUPABASE_URL`
@@ -170,6 +192,14 @@ git branch -M main
 git remote add origin <repo-url>
 git push -u origin main
 ```
+
+## Governance flow implemented
+
+- **dMRV validation**: `POST /api/validate-dmrv` validates payloads and returns `valid` + `issues`.
+- **Permanence model**: `app/lib/permanenceModel.ts` computes risk-adjusted permanence for authorization.
+- **Authorization**: `POST /api/authorize` combines dMRV validity, permanence, and sector eligibility.
+- **Minting**: `POST /api/mint` only proceeds for authorized projects, then records token issuance.
+- **Audit**: `POST /api/audit` returns timestamped audit records with authorization result, permanence, and dMRV validity.
 
 ## Sovereign governance alignment
 

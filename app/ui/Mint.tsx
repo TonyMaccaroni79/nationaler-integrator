@@ -5,7 +5,9 @@ export function Mint() {
   const { state, actions } = useAppStore()
   const [projectId, setProjectId] = useState<string>(state.selectedProjectId ?? '')
 
-  const selectedAuth = state.authorization?.authorized ?? false
+  const selectedProject = state.projects.find((project) => project.id === (projectId || state.selectedProjectId))
+  const selectedAuth =
+    state.authorization?.authorized ?? (selectedProject?.status === 'authorized' || selectedProject?.status === 'minted')
   const canMintByRole = state.role === 'ministry'
 
   return (

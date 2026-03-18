@@ -1,4 +1,4 @@
-import type { AdminUser, AuthorizeResponse, DmrvValidationResult, UserRole } from '../types'
+import type { AdminUser, AuditEntry, AuthorizeResponse, DmrvValidationResult, UserRole } from '../types'
 import { supabase } from '../lib/supabaseClient'
 
 async function postJson<T>(url: string, body: unknown): Promise<T> {
@@ -43,7 +43,7 @@ export async function requestMint(projectId: string) {
 }
 
 export async function fetchAudit() {
-  return postJson('/api/audit', {})
+  return postJson<AuditEntry[]>('/api/audit', {})
 }
 
 export async function fetchAdminUsers() {
