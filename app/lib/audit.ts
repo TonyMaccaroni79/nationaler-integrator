@@ -1,4 +1,4 @@
-import { serverSupabase } from './serverSupabase'
+import { serverSupabase } from './serverSupabase.js'
 
 export async function appendAuditLog(projectId: string, action: string, result: string) {
   const { error } = await serverSupabase.from('audit_log').insert({

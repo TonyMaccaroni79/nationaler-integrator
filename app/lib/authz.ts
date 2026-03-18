@@ -1,6 +1,6 @@
 import type { VercelRequest } from '@vercel/node'
-import type { UserRole } from '../types'
-import { serverSupabase } from './serverSupabase'
+import type { UserRole } from '../types/index.js'
+import { serverSupabase } from './serverSupabase.js'
 
 function extractBearerToken(req: VercelRequest): string | null {
   const header = req.headers.authorization

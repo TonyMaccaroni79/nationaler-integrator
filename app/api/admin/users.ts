@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { listAdminUsers } from '../../lib/admin'
-import { requireMinistryRole } from '../../lib/authz'
-import { sendJson } from '../../lib/http'
+import { listAdminUsers } from '../../lib/admin.js'
+import { requireMinistryRole } from '../../lib/authz.js'
+import { sendJson } from '../../lib/http.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

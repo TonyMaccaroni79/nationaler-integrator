@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { listAdminUsers, setUserRole } from '../../lib/admin'
-import { appendAuditLog } from '../../lib/audit'
-import { requireMinistryRole } from '../../lib/authz'
-import { sendJson } from '../../lib/http'
-import { serverSupabase } from '../../lib/serverSupabase'
-import type { UserRole } from '../../types'
+import { listAdminUsers, setUserRole } from '../../lib/admin.js'
+import { appendAuditLog } from '../../lib/audit.js'
+import { requireMinistryRole } from '../../lib/authz.js'
+import { sendJson } from '../../lib/http.js'
+import { serverSupabase } from '../../lib/serverSupabase.js'
+import type { UserRole } from '../../types/index.js'
 
 function parseBody<T>(req: VercelRequest): T | null {
   if (!req.body) return null

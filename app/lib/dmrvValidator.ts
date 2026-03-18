@@ -1,4 +1,4 @@
-import type { DmrvValidationResult, JsonValue } from '../types'
+import type { DmrvValidationResult, JsonValue } from '../types/index.js'
 
 function toRecord(input: JsonValue): Record<string, JsonValue> | null {
   if (typeof input !== 'object' || input === null || Array.isArray(input)) return null

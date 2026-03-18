@@ -1,5 +1,5 @@
-import type { UserRole } from '../types'
-import { serverSupabase } from './serverSupabase'
+import type { UserRole } from '../types/index.js'
+import { serverSupabase } from './serverSupabase.js'
 
 export type AdminUserRow = {
   id: string

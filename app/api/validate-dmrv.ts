@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { requireAuthenticatedUser } from '../lib/authz'
-import { validateDmrvData } from '../lib/dmrvValidator'
-import { sendJson } from '../lib/http'
+import { requireAuthenticatedUser } from '../lib/authz.js'
+import { validateDmrvData } from '../lib/dmrvValidator.js'
+import { sendJson } from '../lib/http.js'
 
 function parseBody<T>(req: VercelRequest): T | null {
   if (!req.body) return null

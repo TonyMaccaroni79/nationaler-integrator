@@ -1,4 +1,4 @@
-import type { JsonValue } from '../types'
+import type { JsonValue } from '../types/index.js'
 
 export function calculatePermanenceScore(dmrvData: JsonValue): number {
   // Prototype scoring model. In production this should become a calibrated,

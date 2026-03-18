@@ -1,2 +1,2 @@
-export { default } from '../app/api/audit'
+export { default } from '../app/api/audit.js'
 

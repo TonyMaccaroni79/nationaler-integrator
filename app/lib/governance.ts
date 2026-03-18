@@ -1,4 +1,4 @@
-import type { AuthorizeResponse, DmrvValidationResult, Sector } from '../types'
+import type { AuthorizeResponse, DmrvValidationResult, Sector } from '../types/index.js'
 
 const ELIGIBLE_SECTORS = new Set([
   'cement',

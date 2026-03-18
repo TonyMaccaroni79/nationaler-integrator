@@ -1,2 +1,2 @@
-export { default } from '../../app/api/admin/set-role'
+export { default } from '../../app/api/admin/set-role.js'
 

@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { appendAuditLog } from '../lib/audit'
-import { requireMinistryRole } from '../lib/authz'
-import { validateDmrvData } from '../lib/dmrvValidator'
-import { authorizeProject, checkSectorEligibility } from '../lib/governance'
-import { sendJson } from '../lib/http'
-import { calculatePermanenceScore } from '../lib/permanenceModel'
-import { serverSupabase } from '../lib/serverSupabase'
+import { appendAuditLog } from '../lib/audit.js'
+import { requireMinistryRole } from '../lib/authz.js'
+import { validateDmrvData } from '../lib/dmrvValidator.js'
+import { authorizeProject, checkSectorEligibility } from '../lib/governance.js'
+import { sendJson } from '../lib/http.js'
+import { calculatePermanenceScore } from '../lib/permanenceModel.js'
+import { serverSupabase } from '../lib/serverSupabase.js'
 
 function parseBody<T>(req: VercelRequest): T | null {
   if (!req.body) return null

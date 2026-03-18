@@ -1,2 +1,2 @@
-export { default } from '../app/api/authorize'
+export { default } from '../app/api/authorize.js'
 

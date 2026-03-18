@@ -1,2 +1,2 @@
-export { default } from '../app/api/mint'
+export { default } from '../app/api/mint.js'
 

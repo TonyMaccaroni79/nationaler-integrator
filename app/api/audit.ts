@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { listAuditLog } from '../lib/audit'
-import { requireAuthenticatedUser } from '../lib/authz'
-import { sendJson } from '../lib/http'
+import { listAuditLog } from '../lib/audit.js'
+import { requireAuthenticatedUser } from '../lib/authz.js'
+import { sendJson } from '../lib/http.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

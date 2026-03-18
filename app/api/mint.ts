@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { appendAuditLog } from '../lib/audit'
-import { requireMinistryRole } from '../lib/authz'
-import { sendJson } from '../lib/http'
-import { mintTokenId } from '../lib/registryMock'
-import { serverSupabase } from '../lib/serverSupabase'
+import { appendAuditLog } from '../lib/audit.js'
+import { requireMinistryRole } from '../lib/authz.js'
+import { sendJson } from '../lib/http.js'
+import { mintTokenId } from '../lib/registryMock.js'
+import { serverSupabase } from '../lib/serverSupabase.js'
 
 function parseBody<T>(req: VercelRequest): T | null {
   if (!req.body) return null

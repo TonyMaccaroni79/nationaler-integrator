@@ -1,2 +1,2 @@
-export { default } from '../app/api/validate-dmrv'
+export { default } from '../app/api/validate-dmrv.js'
 
