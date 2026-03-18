@@ -19,7 +19,15 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
   })
 
   const text = await res.text()
-  const data = text ? (JSON.parse(text) as unknown) : {}
+  let data: unknown = {}
+  if (text) {
+    try {
+      data = JSON.parse(text) as unknown
+    } catch {
+      const message = `API returned non-JSON response (${res.status}) on ${url}: ${text.slice(0, 140)}`
+      throw new Error(message)
+    }
+  }
 
   if (!res.ok) {
     const message =
