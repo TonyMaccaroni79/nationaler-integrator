@@ -1,0 +1,20 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "app/api/**/*.ts": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/validate-dmrv", "destination": "/app/api/validate-dmrv.ts" },
+    { "source": "/api/authorize", "destination": "/app/api/authorize.ts" },
+    { "source": "/api/mint", "destination": "/app/api/mint.ts" },
+    { "source": "/api/audit", "destination": "/app/api/audit.ts" },
+    { "source": "/api/admin/users", "destination": "/app/api/admin/users.ts" },
+    { "source": "/api/admin/set-role", "destination": "/app/api/admin/set-role.ts" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+
