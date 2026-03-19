@@ -134,7 +134,7 @@ function Shell() {
             Audit Trail
           </a>
           <a href="#process-flow" className={route === 'process-flow' ? 'active' : ''}>
-            Prozesskette
+            Process flow
           </a>
           {state.role === 'ministry' ? (
             <a href="#admin" className={route === 'admin' ? 'active' : ''}>

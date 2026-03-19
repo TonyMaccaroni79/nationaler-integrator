@@ -1,43 +1,43 @@
 const STEPS = [
   {
-    title: 'Rohdaten aus dem Sektor',
+    title: 'Raw data from the sector',
     explanation:
-      'Die ursprünglichen Daten entstehen immer im Sektor selbst: Industrie, Landwirtschaft, Energie, Forst, Abfall, Logistik. Beispiele: Sensorik, Satelliten, Bodenproben, Produktionsdaten, IoT-Systeme.',
+      'The original data always originates in the sector itself: industry, agriculture, energy, forestry, waste, logistics. Examples: sensors, satellites, soil samples, production data, IoT systems.',
   },
   {
-    title: 'dMRV-Aufbereitung durch Dienstleister (z. B. Xange)',
+    title: 'dMRV preparation by service providers (e.g. Xange)',
     explanation:
-      'dMRV-Provider wie Xange bereiten die Rohdaten auf: Monitoring, Satellitenanalyse, Modellierung, Methodologie-Anwendung. Sie liefern Berichte und strukturierte Daten, ersetzen aber NICHT die staatliche Validierung.',
+      'dMRV providers such as Xange prepare the raw data: monitoring, satellite analysis, modelling, methodology application. They deliver reports and structured data, but do NOT replace government validation.',
   },
   {
-    title: 'Übermittlung an den Nationalen Integrator',
+    title: 'Submission to the National Integrator',
     explanation:
-      'Die aufbereiteten Daten werden über API, Upload oder Partner-Integration an den Nationalen Integrator übermittelt. Dies ist der erste staatliche Kontaktpunkt.',
+      'The prepared data is submitted to the National Integrator via API, upload or partner integration. This is the first government point of contact.',
   },
   {
-    title: 'Staatliche dMRV-Validierung',
+    title: 'Government dMRV validation',
     explanation:
-      'Der Nationale Integrator prüft Vollständigkeit, Methodologie, Plausibilität und Konsistenz. Dies ist die staatliche Qualitätsprüfung und kann nicht ausgelagert werden.',
+      'The National Integrator checks completeness, methodology, plausibility and consistency. This is the government quality assurance and cannot be outsourced.',
   },
   {
-    title: 'Permanenz- und Risikomodell',
+    title: 'Permanence and risk model',
     explanation:
-      'Der Nationale Integrator berechnet Permanenz, Risiko, Dauerhaftigkeit und Reversibilitätsfaktoren. Dies ist ein staatliches Modell, unabhängig von der Registry.',
+      'The National Integrator calculates permanence, risk, durability and reversibility factors. This is a government model, independent of the registry.',
   },
   {
-    title: 'Governance-Entscheidung (Autorisierung)',
+    title: 'Governance decision (authorization)',
     explanation:
-      'Der Staat entscheidet: autorisiert / nicht autorisiert. Diese Entscheidung ist rechtsrelevant, Art-6-konform und ETF-konform.',
+      'The state decides: authorized / not authorized. This decision is legally binding, Article-6-compliant and ETF-compliant.',
   },
   {
-    title: 'Token-Minting über Xange (Registry)',
+    title: 'Token minting via Xange (registry)',
     explanation:
-      'Erst nach staatlicher Freigabe wird über Xange ein digitaler Vermögenswert erzeugt. Xange ist hier der technische Ausgabekanal, nicht die Entscheidungsinstanz.',
+      'Only after government approval is a digital asset created via Xange. Xange is the technical issuance channel here, not the decision-making authority.',
   },
   {
-    title: 'Audit-Trail',
+    title: 'Audit trail',
     explanation:
-      'Alle Schritte werden dokumentiert: Validierung, Autorisierung, Minting. Der Auditor prüft die Nachvollziehbarkeit der Prozesse, nicht die Rohdaten.',
+      'All steps are documented: validation, authorization, minting. The auditor verifies the traceability of processes, not the raw data.',
   },
 ]
 
@@ -67,9 +67,9 @@ export function ProcessFlow() {
   return (
     <div className="stack">
       <section className="panel">
-        <h2>CO₂-Governance-Prozesskette</h2>
+        <h2>CO₂ governance process flow</h2>
         <p className="subtle">
-          Vollständige logische Prozesskette: Schritte vor und innerhalb des Nationalen Integrators.
+          Complete logical process chain: steps before and inside the National Integrator.
         </p>
       </section>
 

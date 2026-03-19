@@ -28,7 +28,7 @@ export function Dashboard() {
 
       <section className="panel">
         <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
-          Prozesskette anzeigen
+          Show process flow
         </button>
       </section>
 
