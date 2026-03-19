@@ -37,6 +37,9 @@ export function Dashboard() {
           <button type="button" onClick={() => (window.location.hash = '#asset-usage')}>
             Show asset usage
           </button>
+          <button type="button" onClick={() => (window.location.hash = '#itmo')}>
+            Show ITMO & NDC
+          </button>
         </div>
       </section>
 

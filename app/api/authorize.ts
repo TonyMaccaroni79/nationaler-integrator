@@ -3,6 +3,7 @@ import { appendAuditLog } from '../lib/audit.js'
 import { requireMinistryRole } from '../lib/authz.js'
 import { checkSectorEligibility } from '../lib/governance.js'
 import { runGovernancePipeline } from '../lib/governancePipeline.js'
+import { runNdcItmoPipeline } from '../lib/ndcItmoPipeline.js'
 import { sendJson } from '../lib/http.js'
 import { serverSupabase } from '../lib/serverSupabase.js'
 
@@ -59,6 +60,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     sectorEligibility.eligible,
   )
 
+  const ndcItmo = runNdcItmoPipeline(project.dmrv_data, sector.name, result)
+
   const reason = result.decision.reason ?? (result.decision.authorized ? 'Authorized' : 'Rejected')
 
   const { error: updateProjectError } = await serverSupabase
@@ -102,6 +105,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       dmrvIssues: result.dmrvIssues,
       sectorEligible: result.sectorEligible,
       sectorRules: result.sectorRules,
+    },
+    ndcItmo: {
+      ndcCompatible: ndcItmo.ndcCompatible,
+      itmoEligible: ndcItmo.itmoEligible,
+      authorizationType: ndcItmo.authorizationType,
+      maxITMOExport: ndcItmo.maxITMOExport,
+      adjustmentApplied: ndcItmo.adjustmentApplied,
+      adjustmentAmount: ndcItmo.adjustmentAmount,
+      adjustmentYear: ndcItmo.adjustmentYear,
     },
   })
 }

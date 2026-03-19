@@ -11,13 +11,14 @@ import { Admin } from './Admin'
 import { ProcessFlow } from './ProcessFlow'
 import { GreenFinance } from './GreenFinance'
 import { AssetUsage } from './AssetUsage'
+import { ITMOView } from './ITMOView'
 import { GovernanceDetails } from './GovernanceDetails'
 import { Privacy } from './Privacy'
 import { useAppStore } from './store'
 
-type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'green-finance' | 'asset-usage' | 'admin' | 'process-flow' | 'privacy'
+type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'green-finance' | 'asset-usage' | 'itmo' | 'admin' | 'process-flow' | 'privacy'
 
-const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'green-finance', 'asset-usage', 'admin', 'process-flow', 'privacy']
+const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'green-finance', 'asset-usage', 'itmo', 'admin', 'process-flow', 'privacy']
 
 function normalizeRoute(hash: string): Route {
   const base = hash.replace(/#/, '').split('?')[0]
@@ -55,6 +56,8 @@ function Shell() {
         return <GreenFinance />
       case 'asset-usage':
         return <AssetUsage />
+      case 'itmo':
+        return <ITMOView />
       case 'admin':
         return <Admin />
       case 'process-flow':
@@ -157,6 +160,9 @@ function Shell() {
           </a>
           <a href="#asset-usage" className={route === 'asset-usage' ? 'active' : ''}>
             Asset usage
+          </a>
+          <a href="#itmo" className={route === 'itmo' ? 'active' : ''}>
+            ITMO & NDC
           </a>
           <a href="#process-flow" className={route === 'process-flow' ? 'active' : ''}>
             Process flow

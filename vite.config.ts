@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
           '/api/bootstrap': () => import('./app/api/bootstrap'),
           '/api/reset-demo': () => import('./app/api/reset-demo'),
           '/api/governance-details': () => import('./app/api/governance-details'),
+          '/api/itmo-details': () => import('./app/api/itmo-details'),
           '/api/admin/users': () => import('./app/api/admin/users'),
           '/api/admin/set-role': () => import('./app/api/admin/set-role'),
         }

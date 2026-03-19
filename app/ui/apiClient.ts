@@ -113,3 +113,47 @@ export async function fetchGovernanceDetails(projectId: string) {
   return data as GovernanceDetailsResponse
 }
 
+export type ItmoDetailsResponse = {
+  projectId: string
+  projectName: string
+  sectorName: string
+  itmo: {
+    itmoEligible: boolean
+    authorizationType: string
+    maxITMOExport: number
+    ndcCompatible: boolean
+    adjustmentApplied: boolean
+    adjustmentAmount: number
+    adjustmentYear: number
+  }
+}
+
+export async function fetchItmoDetails(projectId: string) {
+  const params = new URLSearchParams({ projectId })
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  const token = session?.access_token
+  if (!token) throw new Error('Authentication required. Please sign in.')
+
+  const res = await fetch(`/api/itmo-details?${params}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  const text = await res.text()
+  let data: unknown = {}
+  if (text) {
+    try {
+      data = JSON.parse(text) as unknown
+    } catch {
+      throw new Error(`API returned non-JSON response (${res.status}) on /api/itmo-details: ${text.slice(0, 140)}`)
+    }
+  }
+  if (!res.ok) {
+    const message =
+      typeof data === 'object' && data !== null && 'error' in data ? String((data as { error: string }).error) : `Request failed: ${res.status}`
+    throw new Error(message)
+  }
+  return data as ItmoDetailsResponse
+}
+
