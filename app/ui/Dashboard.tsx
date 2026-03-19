@@ -38,7 +38,12 @@ export function Dashboard() {
       <section className="panel">
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <h3>Project statuses</h3>
-          <button onClick={() => void actions.reloadCoreData()}>Refresh</button>
+          <div className="row">
+            {state.role === 'ministry' ? (
+              <button onClick={() => void actions.runBootstrap()}>Add example projects</button>
+            ) : null}
+            <button onClick={() => void actions.reloadCoreData()}>Refresh</button>
+          </div>
         </div>
         {state.loading ? (
           <p className="subtle">Loading projects…</p>
@@ -47,15 +52,10 @@ export function Dashboard() {
             <span className="badge danger">{state.error}</span>
           </p>
         ) : state.projects.length === 0 ? (
-          <div className="stack">
-            <p className="subtle">
-              No projects available. Run <code>supabase/schema.sql</code> and <code>supabase/seed.sql</code> in
-              Supabase SQL Editor (in that order), or use the button below to create example data.
-            </p>
-            {state.role === 'ministry' ? (
-              <button onClick={() => void actions.runBootstrap()}>Bootstrap example projects</button>
-            ) : null}
-          </div>
+          <p className="subtle">
+            No projects available. Run <code>supabase/schema.sql</code> and <code>supabase/seed.sql</code> in
+            Supabase SQL Editor, or click &quot;Add example projects&quot; above (ministry only).
+          </p>
         ) : (
           <div className="row">
             {state.projects.map((project) => (
