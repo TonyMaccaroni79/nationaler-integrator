@@ -1,5 +1,6 @@
 import type { JsonValue } from '../types/index.js'
 import { sectorRules, type SectorRule } from '../config/sectorRules.js'
+import { globalParameters } from '../config/globalParameters.js'
 import { computeBaseline } from './models/baselineModel.js'
 import { computeRiskFactor } from './models/riskModel.js'
 import { computeReversibilityFactor } from './models/reversibilityModel.js'
@@ -59,6 +60,7 @@ export function runGovernancePipeline(
     operationalRisk,
     marketRisk,
     governanceRisk,
+    weights: globalParameters.riskWeights,
   })
 
   const reversibilityProbability = num(
@@ -72,6 +74,7 @@ export function runGovernancePipeline(
   const reversibilityFactor = computeReversibilityFactor({
     reversibilityProbability,
     mitigationMeasuresScore,
+    mitigationFactor: globalParameters.reversibilityMitigationFactor,
   })
 
   const projectDurationYears = num(
@@ -100,6 +103,7 @@ export function runGovernancePipeline(
     regulatoryBaseline,
     financialAdditionalityScore,
     technologicalAdditionalityScore,
+    minScore: globalParameters.minAdditionalityScore,
   })
 
   const completeness = structuralValidation.valid ? 80 : 40
@@ -119,6 +123,7 @@ export function runGovernancePipeline(
       methodologyCompliance,
       evidenceQuality,
       dataConsistency,
+      minScore: globalParameters.minDmrvScore,
     })
 
   const decision = computeGovernanceDecision({
@@ -127,6 +132,7 @@ export function runGovernancePipeline(
     additionality,
     sectorEligible,
     sectorRules: rules,
+    defaultMinPermanence: globalParameters.defaultMinPermanence,
   })
 
   return {

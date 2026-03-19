@@ -18,13 +18,20 @@ export default defineConfig(({ mode }) => {
           '/api/mint': () => import('./app/api/mint'),
           '/api/audit': () => import('./app/api/audit'),
           '/api/bootstrap': () => import('./app/api/bootstrap'),
+          '/api/reset-demo': () => import('./app/api/reset-demo'),
+          '/api/governance-details': () => import('./app/api/governance-details'),
           '/api/admin/users': () => import('./app/api/admin/users'),
           '/api/admin/set-role': () => import('./app/api/admin/set-role'),
         }
 
         server.middlewares.use(async (req, res, next) => {
-          const path = (req.url ?? '').split('?')[0]
+          const url = req.url ?? ''
+          const [path, queryString] = url.split('?')
           if (!path.startsWith('/api/')) return next()
+
+          ;(req as { query?: Record<string, string> }).query = Object.fromEntries(
+            new URLSearchParams(queryString ?? ''),
+          )
 
           const load = routeLoaders[path]
           if (!load) {

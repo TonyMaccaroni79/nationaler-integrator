@@ -6,6 +6,7 @@ export interface GovernanceDecisionInput {
   additionality: boolean
   sectorEligible: boolean
   sectorRules: SectorRule | null
+  defaultMinPermanence: number
 }
 
 export interface GovernanceDecisionOutput {
@@ -17,7 +18,7 @@ export interface GovernanceDecisionOutput {
  * Final governance decision based on all model outputs and sector rules.
  */
 export function computeGovernanceDecision(input: GovernanceDecisionInput): GovernanceDecisionOutput {
-  const { dmrvValid, permanenceScore, additionality, sectorEligible, sectorRules } = input
+  const { dmrvValid, permanenceScore, additionality, sectorEligible, sectorRules, defaultMinPermanence } = input
 
   if (!sectorEligible) {
     return { authorized: false, reason: 'Sector failed eligibility checks.' }
@@ -31,7 +32,7 @@ export function computeGovernanceDecision(input: GovernanceDecisionInput): Gover
     return { authorized: false, reason: 'Additionality criteria not met.' }
   }
 
-  const minPermanence = sectorRules?.minPermanence ?? 55
+  const minPermanence = sectorRules?.minPermanence ?? defaultMinPermanence
   if (permanenceScore < minPermanence) {
     return {
       authorized: false,

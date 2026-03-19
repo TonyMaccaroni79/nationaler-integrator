@@ -81,10 +81,23 @@ export async function runBootstrap(): Promise<{ projectsCreated: number; error?:
 
     projectsCreated++
 
-    await sb.from('authorizations').upsert({ project_id: inserted.id, authorized: true, reason: 'Authorized' }, { onConflict: 'project_id' })
-    await sb.from('tokens').insert({ project_id: inserted.id, token_id: proj.token_id }).then(() => {})
-    await sb.from('audit_log').insert({ project_id: inserted.id, action: 'authorize', result: 'authorized: Authorized' }).then(() => {})
-    await sb.from('audit_log').insert({ project_id: inserted.id, action: 'mint', result: `minted ${proj.token_id}` }).then(() => {})
+    const { error: authErr } = await sb
+      .from('authorizations')
+      .upsert({ project_id: inserted.id, authorized: true, reason: 'Authorized' }, { onConflict: 'project_id' })
+    if (authErr) return { projectsCreated, error: `authorizations: ${authErr.message}` }
+
+    const { error: tokenErr } = await sb.from('tokens').insert({ project_id: inserted.id, token_id: proj.token_id })
+    if (tokenErr) return { projectsCreated, error: `tokens: ${tokenErr.message}` }
+
+    const { error: audit1Err } = await sb
+      .from('audit_log')
+      .insert({ project_id: inserted.id, action: 'authorize', result: 'authorized: Authorized' })
+    if (audit1Err) return { projectsCreated, error: `audit_log: ${audit1Err.message}` }
+
+    const { error: audit2Err } = await sb
+      .from('audit_log')
+      .insert({ project_id: inserted.id, action: 'mint', result: `minted ${proj.token_id}` })
+    if (audit2Err) return { projectsCreated, error: `audit_log: ${audit2Err.message}` }
   }
 
   return { projectsCreated }
