@@ -28,6 +28,8 @@ export function Audit() {
             <tr>
               <th>timestamp</th>
               <th>projectId</th>
+              <th>action</th>
+              <th>result</th>
               <th>authorization result</th>
               <th>permanence score</th>
               <th>dMRV validity</th>
@@ -36,13 +38,15 @@ export function Audit() {
           <tbody>
             {state.auditEntries.length === 0 ? (
               <tr>
-                <td colSpan={5}>No audit entries yet.</td>
+                <td colSpan={7}>No audit entries yet.</td>
               </tr>
             ) : (
               state.auditEntries.map((entry) => (
                 <tr key={entry.id}>
                   <td>{entry.timestamp}</td>
                   <td>{entry.project_id}</td>
+                  <td>{entry.action}</td>
+                  <td>{entry.result}</td>
                   <td>{entry.authorization_result ?? 'n/a'}</td>
                   <td>{entry.permanence_score ?? 'n/a'}</td>
                   <td>{entry.dmrv_validity ?? 'unknown'}</td>

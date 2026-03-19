@@ -273,6 +273,13 @@ and not exists (
     and a.result = 'minted AT-ENERGY-2026-009-VERBUND-BIO'
 );
 
+-- Ensure profiles exist for test users (in case they were created before the trigger).
+insert into profiles (id, email, role)
+select id, coalesce(email, ''), 'auditor'
+from auth.users
+where email in ('ministry@bmluk.gv.at', 'auditor@bmluk.gv.at')
+on conflict (id) do update set email = excluded.email;
+
 -- Optional RBAC bootstrap: if these users exist in Supabase Auth, map roles.
 update profiles
 set role = 'ministry'

@@ -204,9 +204,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     setAuthenticated(true)
     setUserEmail(user.email ?? null)
-    await loadProfile(user.id)
-    await reloadCoreData()
-    await loadAudit()
+    try {
+      await loadProfile(user.id)
+      await reloadCoreData()
+      await loadAudit()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to load profile or data. Run seed.sql in Supabase if users have no profiles.')
+    }
   }, [loadAudit, loadProfile, reloadCoreData])
 
   const signOut = useCallback(async () => {
@@ -216,6 +220,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setUserEmail(null)
     setRole(null)
     setSelectedProjectId(null)
+    setSectors([])
+    setProjects([])
     setDmrvValidation(null)
     setAuthorization(null)
     setMintedTokenId(null)

@@ -121,11 +121,21 @@ You can keep your existing Supabase project. Deleting it is not required.
 2. Repeat steps from Option A.
 3. Update `.env` values for the new project URL/keys.
 
+### Verification
+
+After running `schema.sql` and `seed.sql`, verify in Supabase SQL Editor:
+
+```sql
+SELECT COUNT(*) FROM projects;  -- Expected: 3
+SELECT name, status FROM projects ORDER BY name;
+```
+
 ### Troubleshooting
 
 - If SQL says object already exists, run the scripts in the same order again (the schema is mostly idempotent).
 - If a user can sign in but has no role, check `profiles` table for that user ID/email.
 - If Admin screen is missing, log in with a user whose `profiles.role` is `ministry`.
+- **No projects on Dashboard:** Run `schema.sql` then `seed.sql` in Supabase SQL Editor. Ensure Vercel/local `.env` points to the same Supabase project. Click Refresh on the Dashboard.
 
 ## Environment variables
 

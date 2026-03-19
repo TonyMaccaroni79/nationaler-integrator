@@ -10,7 +10,7 @@ const modules = [
 ]
 
 export function Dashboard() {
-  const { state } = useAppStore()
+  const { state, actions } = useAppStore()
 
   return (
     <div className="stack">
@@ -36,9 +36,21 @@ export function Dashboard() {
       </section>
 
       <section className="panel">
-        <h3>Project statuses</h3>
-        {state.projects.length === 0 ? (
-          <p className="subtle">No projects available in Supabase yet.</p>
+        <div className="row" style={{ justifyContent: 'space-between' }}>
+          <h3>Project statuses</h3>
+          <button onClick={() => void actions.reloadCoreData()}>Refresh</button>
+        </div>
+        {state.loading ? (
+          <p className="subtle">Loading projects…</p>
+        ) : state.error ? (
+          <p className="subtle">
+            <span className="badge danger">{state.error}</span>
+          </p>
+        ) : state.projects.length === 0 ? (
+          <p className="subtle">
+            No projects available. Run <code>supabase/schema.sql</code> and <code>supabase/seed.sql</code> in
+            Supabase SQL Editor (in that order), then click Refresh.
+          </p>
         ) : (
           <div className="row">
             {state.projects.map((project) => (
