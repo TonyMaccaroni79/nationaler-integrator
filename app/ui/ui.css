@@ -209,6 +209,45 @@ th {
   color: var(--muted);
 }
 
+.process-flow-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.process-flow-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.process-flow-step:last-child {
+  border-bottom: none;
+}
+
+.process-flow-step {
+  position: relative;
+}
+
+.process-flow-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.process-flow-title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.process-flow-explanation {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 @media (max-width: 980px) {
   .shell {
     grid-template-columns: 1fr;

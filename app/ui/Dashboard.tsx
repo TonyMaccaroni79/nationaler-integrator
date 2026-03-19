@@ -26,6 +26,12 @@ export function Dashboard() {
         </div>
       </section>
 
+      <section className="panel">
+        <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
+          Prozesskette anzeigen
+        </button>
+      </section>
+
       <section className="grid">
         {modules.map((module) => (
           <a key={module.title} href={module.link} className="panel col-6">

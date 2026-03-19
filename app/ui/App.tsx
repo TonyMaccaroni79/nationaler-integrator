@@ -8,11 +8,12 @@ import { Governance } from './Governance'
 import { Mint } from './Mint'
 import { Audit } from './Audit'
 import { Admin } from './Admin'
+import { ProcessFlow } from './ProcessFlow'
 import { useAppStore } from './store'
 
-type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'mint' | 'audit' | 'admin'
+type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'mint' | 'audit' | 'admin' | 'process-flow'
 
-const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'mint', 'audit', 'admin']
+const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'mint', 'audit', 'admin', 'process-flow']
 
 function normalizeRoute(hash: string): Route {
   const candidate = hash.replace('#', '')
@@ -46,6 +47,8 @@ function Shell() {
         return <Audit />
       case 'admin':
         return <Admin />
+      case 'process-flow':
+        return <ProcessFlow />
       case 'dashboard':
       default:
         return <Dashboard />
@@ -129,6 +132,9 @@ function Shell() {
           </a>
           <a href="#audit" className={route === 'audit' ? 'active' : ''}>
             Audit Trail
+          </a>
+          <a href="#process-flow" className={route === 'process-flow' ? 'active' : ''}>
+            Prozesskette
           </a>
           {state.role === 'ministry' ? (
             <a href="#admin" className={route === 'admin' ? 'active' : ''}>
