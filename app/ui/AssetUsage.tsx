@@ -1,43 +1,43 @@
 const USER_GROUPS = [
   {
-    title: 'Banken',
+    title: 'Banks',
     explanation:
-      'Nutzen das Asset für Green Bonds, ESG-Reporting, Kreditrisikominderung und nachhaltige Finanzprodukte.',
+      'Use the asset for Green Bonds, ESG reporting, credit risk mitigation and sustainable finance products.',
   },
   {
-    title: 'Versicherungen',
+    title: 'Insurers',
     explanation:
-      'Nutzen es für Solvency-II-konforme nachhaltige Investments und Klimarisikomodelle.',
+      'Use it for Solvency-II-compliant sustainable investments and climate risk models.',
   },
   {
-    title: 'Asset Manager & Fonds',
+    title: 'Asset managers & funds',
     explanation:
-      'Setzen das Asset als Underlying für Artikel-8/9-Fonds, Climate Transition Funds und Impact-Produkte ein.',
+      'Use the asset as underlying for Article 8/9 funds, Climate Transition Funds and impact products.',
   },
   {
-    title: 'Unternehmen',
+    title: 'Companies',
     explanation:
-      'Verwenden das Asset für Scope-3-Reduktionsnachweise, CSRD-Reporting und Lieferketten-Compliance.',
+      'Use the asset for Scope-3 reduction claims, CSRD reporting and supply chain compliance.',
   },
   {
-    title: 'Ministerien & Staat',
+    title: 'Ministries & government',
     explanation:
-      'Nutzen das Asset für Art-6-Reporting, ETF-Reporting, nationale Inventare und sektorale Klimapläne.',
+      'Use the asset for Article-6 reporting, ETF reporting, national inventories and sectoral climate plans.',
   },
   {
-    title: 'Internationale Organisationen',
+    title: 'International organisations',
     explanation:
-      'Setzen es für Klimafinanzierung, Entwicklungsprogramme und internationale Berichterstattung ein.',
+      'Use it for climate finance, development programmes and international reporting.',
   },
   {
-    title: 'Börsen & Handelsplätze',
+    title: 'Exchanges & trading venues',
     explanation:
-      'Nutzen das Asset als qualifiziertes Klima-Underlying für nachhaltige Finanzprodukte.',
+      'Use the asset as qualified climate underlying for sustainable finance products.',
   },
   {
-    title: 'Rating-Agenturen',
+    title: 'Rating agencies',
     explanation:
-      'Bewerten das Asset für ESG-Ratings, Sustainability Scores und Climate-Risk-Assessments.',
+      'Rate the asset for ESG ratings, sustainability scores and climate risk assessments.',
   },
 ]
 
@@ -67,7 +67,7 @@ export function AssetUsage() {
   return (
     <div className="stack">
       <section className="panel">
-        <h2>Wer nutzt dieses Asset?</h2>
+        <h2>Who uses this asset?</h2>
         <p className="subtle">
           State-authorized, minted, audit-backed and Green-Finance-ready CO₂ assets can be used by
           the following groups.

@@ -35,7 +35,7 @@ export function Dashboard() {
             Green Finance
           </button>
           <button type="button" onClick={() => (window.location.hash = '#asset-usage')}>
-            Asset-Nutzung anzeigen
+            Show asset usage
           </button>
         </div>
       </section>
