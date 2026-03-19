@@ -27,9 +27,14 @@ export function Dashboard() {
       </section>
 
       <section className="panel">
-        <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
-          Show process chain
-        </button>
+        <div className="row" style={{ gap: 10 }}>
+          <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
+            Show process chain
+          </button>
+          <button type="button" onClick={() => (window.location.hash = '#green-finance')}>
+            Green Finance
+          </button>
+        </div>
       </section>
 
       <section className="grid">

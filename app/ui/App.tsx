@@ -9,13 +9,14 @@ import { Mint } from './Mint'
 import { Audit } from './Audit'
 import { Admin } from './Admin'
 import { ProcessFlow } from './ProcessFlow'
+import { GreenFinance } from './GreenFinance'
 import { GovernanceDetails } from './GovernanceDetails'
 import { Privacy } from './Privacy'
 import { useAppStore } from './store'
 
-type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'admin' | 'process-flow' | 'privacy'
+type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'green-finance' | 'admin' | 'process-flow' | 'privacy'
 
-const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'admin', 'process-flow', 'privacy']
+const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'green-finance', 'admin', 'process-flow', 'privacy']
 
 function normalizeRoute(hash: string): Route {
   const base = hash.replace(/#/, '').split('?')[0]
@@ -49,6 +50,8 @@ function Shell() {
         return <Mint />
       case 'audit':
         return <Audit />
+      case 'green-finance':
+        return <GreenFinance />
       case 'admin':
         return <Admin />
       case 'process-flow':
@@ -145,6 +148,9 @@ function Shell() {
           </a>
           <a href="#audit" className={route === 'audit' ? 'active' : ''}>
             Audit Trail
+          </a>
+          <a href="#green-finance" className={route === 'green-finance' ? 'active' : ''}>
+            Green Finance
           </a>
           <a href="#process-flow" className={route === 'process-flow' ? 'active' : ''}>
             Process flow
