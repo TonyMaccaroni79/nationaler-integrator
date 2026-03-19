@@ -10,6 +10,12 @@ const SECTORS = [
   { name: 'logistics', description: 'Fleet and logistics efficiency projects.', dmrv_requirements: ['Fleet inventory', 'Fuel records', 'Distance telematics', 'Methodology boundary'] },
 ]
 
+const EXAMPLE_NAMES = [
+  'Holcim - Klinkerfaktor-Reduktion 2026',
+  'RWA - Humusaufbau Pilotregion Marchfeld',
+  'Verbund - Biomasse Effizienzsteigerung 2026',
+]
+
 const PROJECTS = [
   {
     name: 'Holcim - Klinkerfaktor-Reduktion 2026',
@@ -82,4 +88,47 @@ export async function runBootstrap(): Promise<{ projectsCreated: number; error?:
   }
 
   return { projectsCreated }
+}
+
+/** Resets example projects to draft state for demo. Deletes existing, recreates fresh. */
+export async function runResetDemo(): Promise<{ projectsReset: number; error?: string }> {
+  const sb = serverSupabase
+
+  const { data: toDelete } = await sb.from('projects').select('id').in('name', EXAMPLE_NAMES)
+  if (toDelete?.length) {
+    for (const p of toDelete) {
+      const { error } = await sb.from('projects').delete().eq('id', p.id)
+      if (error) return { projectsReset: 0, error: `delete: ${error.message}` }
+    }
+  }
+
+  const { data: sectors } = await sb.from('sectors').select('id, name')
+  if (!sectors?.length) return { projectsReset: 0, error: 'No sectors found' }
+
+  const sectorById = new Map(sectors.map((s) => [s.name, s.id]))
+  let projectsReset = 0
+
+  for (const proj of PROJECTS) {
+    const sectorId = sectorById.get(proj.sectorName)
+    if (!sectorId) continue
+
+    const { data: inserted, error: insertErr } = await sb
+      .from('projects')
+      .insert({
+        sector_id: sectorId,
+        name: proj.name,
+        dmrv_data: proj.dmrv_data,
+        permanence_score: null,
+        status: 'draft',
+      })
+      .select('id')
+      .single()
+
+    if (insertErr) return { projectsReset, error: `projects: ${insertErr.message}` }
+    if (!inserted) continue
+
+    projectsReset++
+  }
+
+  return { projectsReset }
 }

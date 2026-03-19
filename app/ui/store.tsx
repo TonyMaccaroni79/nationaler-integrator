@@ -11,7 +11,7 @@ import type {
   Sector,
   UserRole,
 } from '../types'
-import { authorizeProject, fetchAdminUsers, fetchAudit, requestMint, runBootstrap, setAdminUserRole, validateDmrv } from './apiClient'
+import { authorizeProject, fetchAdminUsers, fetchAudit, requestMint, runBootstrap, runResetDemo, setAdminUserRole, validateDmrv } from './apiClient'
 
 type AppState = {
   authenticated: boolean
@@ -36,6 +36,7 @@ type AppActions = {
   setSelectedProjectId: (projectId: string) => void
   reloadCoreData: () => Promise<void>
   runBootstrap: () => Promise<void>
+  runResetDemo: () => Promise<void>
   runDmrvValidation: (dmrvData: unknown) => Promise<void>
   runAuthorization: (projectId: string) => Promise<void>
   runMinting: (projectId: string) => Promise<void>
@@ -127,6 +128,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       await loadAudit()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Bootstrap failed')
+    } finally {
+      setLoading(false)
+    }
+  }, [loadAudit, reloadCoreData, role])
+
+  const runResetDemoAction = useCallback(async () => {
+    if (role !== 'ministry') {
+      setError('Only ministry role can reset demo.')
+      return
+    }
+    setError(null)
+    setLoading(true)
+    try {
+      await runResetDemo()
+      await reloadCoreData()
+      await loadAudit()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Reset demo failed')
     } finally {
       setLoading(false)
     }
@@ -354,6 +373,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setSelectedProjectId,
       reloadCoreData,
       runBootstrap: runBootstrapAction,
+      runResetDemo: runResetDemoAction,
       runDmrvValidation,
       runAuthorization,
       runMinting,
@@ -367,6 +387,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       reloadCoreData,
       runAuthorization,
       runBootstrapAction,
+      runResetDemoAction,
       runDmrvValidation,
       runMinting,
       signIn,

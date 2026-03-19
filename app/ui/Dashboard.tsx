@@ -46,10 +46,18 @@ export function Dashboard() {
           <h3>Project statuses</h3>
           <div className="row">
             {state.role === 'ministry' ? (
-              <button onClick={() => void actions.runBootstrap()}>Add example projects</button>
+              <>
+                <button onClick={() => void actions.runBootstrap()}>Add example projects</button>
+                <button onClick={() => void actions.runResetDemo()}>Reset demo</button>
+              </>
             ) : null}
             <button onClick={() => void actions.reloadCoreData()}>Refresh</button>
           </div>
+          {state.role === 'ministry' ? (
+            <p className="subtle" style={{ fontSize: 12, marginTop: 8 }}>
+              Reset demo: sets example projects back to draft so you can demonstrate authorize → mint again.
+            </p>
+          ) : null}
         </div>
         {state.loading ? (
           <p className="subtle">Loading projects…</p>

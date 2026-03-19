@@ -73,6 +73,10 @@ export async function runBootstrap() {
   return postJson<{ ok: boolean; projectsCreated: number }>('/api/bootstrap', {})
 }
 
+export async function runResetDemo() {
+  return postJson<{ ok: boolean; projectsReset: number }>('/api/reset-demo', {})
+}
+
 export type GovernanceDetailsResponse = {
   projectId: string
   projectName: string
