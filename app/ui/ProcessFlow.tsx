@@ -39,6 +39,11 @@ const STEPS = [
     explanation:
       'All steps are documented: validation, authorization, minting. The auditor verifies the traceability of processes, not the raw data.',
   },
+  {
+    title: 'Green Finance assessment',
+    explanation:
+      'After government authorization, the project is assessed for EU Taxonomy, ESG capability and bankability. This makes the token a Green Finance-eligible asset.',
+  },
 ]
 
 function StepIcon({ index }: { index: number }) {
@@ -69,7 +74,8 @@ export function ProcessFlow() {
       <section className="panel">
         <h2>CO₂ governance process flow</h2>
         <p className="subtle">
-          Complete logical process chain: steps before and inside the National Integrator.
+          Complete logical process chain: steps before and inside the National Integrator, ending with
+          Green Finance eligibility.
         </p>
       </section>
 

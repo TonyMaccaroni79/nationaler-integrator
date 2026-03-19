@@ -28,7 +28,7 @@ export function Dashboard() {
 
       <section className="panel">
         <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
-          Show process flow
+          Show process chain
         </button>
       </section>
 
