@@ -1,33 +1,25 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { appendAuditLog } from '../lib/audit.js'
 import { requireMinistryRole } from '../lib/authz.js'
 import { checkSectorEligibility } from '../lib/governance.js'
 import { runGovernancePipeline } from '../lib/governancePipeline.js'
 import { sendJson } from '../lib/http.js'
 import { serverSupabase } from '../lib/serverSupabase.js'
 
-function parseBody<T>(req: VercelRequest): T | null {
-  if (!req.body) return null
-  if (typeof req.body === 'string') {
-    try {
-      return JSON.parse(req.body) as T
-    } catch {
-      return null
-    }
-  }
-  return req.body as T
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET' && req.method !== 'POST') {
     return sendJson(res, 405, { error: 'Method not allowed' })
   }
 
   const auth = await requireMinistryRole(req)
   if (!auth.ok) return sendJson(res, auth.status ?? 403, { error: auth.error })
 
-  const body = parseBody<{ projectId?: string }>(req)
-  const projectId = body?.projectId?.trim()
+  const projectId =
+    req.method === 'GET'
+      ? (req.query.projectId as string)?.trim()
+      : typeof req.body === 'object' && req.body !== null && 'projectId' in req.body
+        ? String((req.body as { projectId?: string }).projectId ?? '').trim()
+        : ''
+
   if (!projectId) {
     return sendJson(res, 400, { error: 'Missing projectId' })
   }
@@ -59,38 +51,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     sectorEligibility.eligible,
   )
 
-  const reason = result.decision.reason ?? (result.decision.authorized ? 'Authorized' : 'Rejected')
-
-  const { error: updateProjectError } = await serverSupabase
-    .from('projects')
-    .update({
-      permanence_score: result.permanenceScore,
-      status: result.decision.authorized ? 'authorized' : 'rejected',
-    })
-    .eq('id', projectId)
-
-  if (updateProjectError) return sendJson(res, 500, { error: updateProjectError.message })
-
-  const { error: authError } = await serverSupabase.from('authorizations').upsert(
-    {
-      project_id: projectId,
-      authorized: result.decision.authorized,
-      reason,
-    },
-    { onConflict: 'project_id' },
-  )
-
-  if (authError) return sendJson(res, 500, { error: authError.message })
-
-  await appendAuditLog(
-    projectId,
-    'authorize',
-    `${result.decision.authorized ? 'authorized' : 'rejected'}: ${reason}`,
-  )
-
   return sendJson(res, 200, {
-    authorized: result.decision.authorized,
-    reason,
+    projectId,
+    projectName: project.name,
+    sectorName: sector.name,
     governance: {
       baseline: result.baseline,
       riskFactor: result.riskFactor,
@@ -102,6 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       dmrvIssues: result.dmrvIssues,
       sectorEligible: result.sectorEligible,
       sectorRules: result.sectorRules,
+      decision: result.decision,
     },
   })
 }

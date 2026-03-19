@@ -1,4 +1,11 @@
-import type { AdminUser, AuditEntry, AuthorizeResponse, DmrvValidationResult, UserRole } from '../types'
+import type {
+  AdminUser,
+  AuditEntry,
+  AuthorizeResponse,
+  DmrvValidationResult,
+  GovernanceDetails,
+  UserRole,
+} from '../types'
 import { supabase } from '../lib/supabaseClient'
 
 async function postJson<T>(url: string, body: unknown): Promise<T> {
@@ -64,5 +71,41 @@ export async function setAdminUserRole(userId: string, role: UserRole) {
 
 export async function runBootstrap() {
   return postJson<{ ok: boolean; projectsCreated: number }>('/api/bootstrap', {})
+}
+
+export type GovernanceDetailsResponse = {
+  projectId: string
+  projectName: string
+  sectorName: string
+  governance: GovernanceDetails & { decision?: { authorized: boolean; reason: string } }
+}
+
+export async function fetchGovernanceDetails(projectId: string) {
+  const params = new URLSearchParams({ projectId })
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  const token = session?.access_token
+  if (!token) throw new Error('Authentication required. Please sign in.')
+
+  const res = await fetch(`/api/governance-details?${params}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  const text = await res.text()
+  let data: unknown = {}
+  if (text) {
+    try {
+      data = JSON.parse(text) as unknown
+    } catch {
+      throw new Error(`API returned non-JSON response (${res.status}) on /api/governance-details: ${text.slice(0, 140)}`)
+    }
+  }
+  if (!res.ok) {
+    const message =
+      typeof data === 'object' && data !== null && 'error' in data ? String((data as { error: string }).error) : `Request failed: ${res.status}`
+    throw new Error(message)
+  }
+  return data as GovernanceDetailsResponse
 }
 

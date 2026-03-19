@@ -71,9 +71,17 @@ export function Governance() {
             </div>
           )}
           {selectedProject ? (
-            <p className="subtle" style={{ marginTop: 12 }}>
-              Permanence score: {selectedProject.permanence_score ?? '—'}
-            </p>
+            <>
+              <p className="subtle" style={{ marginTop: 12 }}>
+                Permanence score: {selectedProject.permanence_score ?? '—'}
+              </p>
+              <a
+                href={`#governance-details?projectId=${selectedProject.id}`}
+                style={{ marginTop: 8, display: 'inline-block' }}
+              >
+                View full governance details →
+              </a>
+            </>
           ) : null}
         </div>
       </section>

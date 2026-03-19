@@ -1,16 +1,5 @@
 import type { AuthorizeResponse, DmrvValidationResult, Sector } from '../types/index.js'
-
-const ELIGIBLE_SECTORS = new Set([
-  'cement',
-  'steel',
-  'energy',
-  'agriculture',
-  'forestry',
-  'waste',
-  'logistics',
-])
-
-const MINIMUM_PERMANENCE_SCORE = 55
+import { ELIGIBLE_SECTORS } from '../config/sectorRules.js'
 
 export function checkSectorEligibility(sector: Sector): { eligible: boolean; reason?: string } {
   const eligible = ELIGIBLE_SECTORS.has(sector.name.toLowerCase())
@@ -20,6 +9,7 @@ export function checkSectorEligibility(sector: Sector): { eligible: boolean; rea
   return { eligible: true }
 }
 
+/** @deprecated Use governance pipeline and computeGovernanceDecision instead */
 export function authorizeProject(
   dmrvValidation: DmrvValidationResult,
   permanenceScore: number,
@@ -33,8 +23,9 @@ export function authorizeProject(
     return { authorized: false, reason: 'dMRV validation failed.' }
   }
 
-  if (permanenceScore < MINIMUM_PERMANENCE_SCORE) {
-    return { authorized: false, reason: `Permanence score below threshold (${MINIMUM_PERMANENCE_SCORE}).` }
+  const minPermanence = 55
+  if (permanenceScore < minPermanence) {
+    return { authorized: false, reason: `Permanence score below threshold (${minPermanence}).` }
   }
 
   return { authorized: true }

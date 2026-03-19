@@ -209,6 +209,26 @@ th {
   color: var(--muted);
 }
 
+.governance-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.governance-detail-row span:first-child {
+  color: var(--muted);
+}
+
+.panel.ok {
+  border-left-color: var(--ok);
+}
+
+.panel.danger {
+  border-left-color: var(--danger);
+}
+
 .process-flow-timeline {
   display: flex;
   flex-direction: column;

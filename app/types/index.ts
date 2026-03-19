@@ -55,6 +55,27 @@ export type DmrvValidationResult = {
 export type AuthorizeResponse = {
   authorized: boolean
   reason?: string
+  governance?: GovernanceDetails
+}
+
+export type SectorRule = {
+  minPermanence: number
+  baselinePermanence: number
+  conservativeAdjustmentFactor: number
+}
+
+export type GovernanceDetails = {
+  baseline: number
+  riskFactor: number
+  reversibilityFactor: number
+  permanenceScore: number
+  additionality: boolean
+  dmrvValid: boolean
+  dmrvStructuralValid: boolean
+  dmrvIssues: string[]
+  sectorEligible: boolean
+  sectorRules: SectorRule | null
+  decision?: { authorized: boolean; reason: string }
 }
 
 export type UserRole = 'ministry' | 'auditor'

@@ -9,15 +9,16 @@ import { Mint } from './Mint'
 import { Audit } from './Audit'
 import { Admin } from './Admin'
 import { ProcessFlow } from './ProcessFlow'
+import { GovernanceDetails } from './GovernanceDetails'
 import { useAppStore } from './store'
 
-type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'mint' | 'audit' | 'admin' | 'process-flow'
+type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'admin' | 'process-flow'
 
-const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'mint', 'audit', 'admin', 'process-flow']
+const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'admin', 'process-flow']
 
 function normalizeRoute(hash: string): Route {
-  const candidate = hash.replace('#', '')
-  if (ROUTES.includes(candidate as Route)) return candidate as Route
+  const base = hash.replace(/#/, '').split('?')[0]
+  if (ROUTES.includes(base as Route)) return base as Route
   return 'dashboard'
 }
 
@@ -41,6 +42,8 @@ function Shell() {
         return <DMRV />
       case 'governance':
         return <Governance />
+      case 'governance-details':
+        return <GovernanceDetails />
       case 'mint':
         return <Mint />
       case 'audit':
@@ -126,6 +129,9 @@ function Shell() {
           </a>
           <a href="#governance" className={route === 'governance' ? 'active' : ''}>
             Governance Authorization
+          </a>
+          <a href="#governance-details" className={route === 'governance-details' ? 'active' : ''}>
+            Governance Details
           </a>
           <a href="#mint" className={route === 'mint' ? 'active' : ''}>
             Minting (Xange Layer)
