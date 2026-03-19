@@ -47,10 +47,15 @@ export function Dashboard() {
             <span className="badge danger">{state.error}</span>
           </p>
         ) : state.projects.length === 0 ? (
-          <p className="subtle">
-            No projects available. Run <code>supabase/schema.sql</code> and <code>supabase/seed.sql</code> in
-            Supabase SQL Editor (in that order), then click Refresh.
-          </p>
+          <div className="stack">
+            <p className="subtle">
+              No projects available. Run <code>supabase/schema.sql</code> and <code>supabase/seed.sql</code> in
+              Supabase SQL Editor (in that order), or use the button below to create example data.
+            </p>
+            {state.role === 'ministry' ? (
+              <button onClick={() => void actions.runBootstrap()}>Bootstrap example projects</button>
+            ) : null}
+          </div>
         ) : (
           <div className="row">
             {state.projects.map((project) => (

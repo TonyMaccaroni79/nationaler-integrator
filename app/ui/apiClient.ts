@@ -62,3 +62,7 @@ export async function setAdminUserRole(userId: string, role: UserRole) {
   return postJson<{ user: AdminUser }>('/api/admin/set-role', { userId, role })
 }
 
+export async function runBootstrap() {
+  return postJson<{ ok: boolean; projectsCreated: number }>('/api/bootstrap', {})
+}
+

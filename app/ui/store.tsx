@@ -11,7 +11,7 @@ import type {
   Sector,
   UserRole,
 } from '../types'
-import { authorizeProject, fetchAdminUsers, fetchAudit, requestMint, setAdminUserRole, validateDmrv } from './apiClient'
+import { authorizeProject, fetchAdminUsers, fetchAudit, requestMint, runBootstrap, setAdminUserRole, validateDmrv } from './apiClient'
 
 type AppState = {
   authenticated: boolean
@@ -35,6 +35,7 @@ type AppActions = {
   signOut: () => Promise<void>
   setSelectedProjectId: (projectId: string) => void
   reloadCoreData: () => Promise<void>
+  runBootstrap: () => Promise<void>
   runDmrvValidation: (dmrvData: unknown) => Promise<void>
   runAuthorization: (projectId: string) => Promise<void>
   runMinting: (projectId: string) => Promise<void>
@@ -112,6 +113,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setError(e instanceof Error ? e.message : 'Failed to load audit entries')
     }
   }, [])
+
+  const runBootstrapAction = useCallback(async () => {
+    if (role !== 'ministry') {
+      setError('Only ministry role can bootstrap example data.')
+      return
+    }
+    setError(null)
+    setLoading(true)
+    try {
+      await runBootstrap()
+      await reloadCoreData()
+      await loadAudit()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Bootstrap failed')
+    } finally {
+      setLoading(false)
+    }
+  }, [loadAudit, reloadCoreData, role])
 
   const loadAdminUsers = useCallback(async () => {
     if (role !== 'ministry') {
@@ -334,6 +353,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       signOut,
       setSelectedProjectId,
       reloadCoreData,
+      runBootstrap: runBootstrapAction,
       runDmrvValidation,
       runAuthorization,
       runMinting,
@@ -346,6 +366,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       loadAudit,
       reloadCoreData,
       runAuthorization,
+      runBootstrapAction,
       runDmrvValidation,
       runMinting,
       signIn,

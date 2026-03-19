@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
           '/api/authorize': () => import('./app/api/authorize'),
           '/api/mint': () => import('./app/api/mint'),
           '/api/audit': () => import('./app/api/audit'),
+          '/api/bootstrap': () => import('./app/api/bootstrap'),
           '/api/admin/users': () => import('./app/api/admin/users'),
           '/api/admin/set-role': () => import('./app/api/admin/set-role'),
         }

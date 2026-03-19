@@ -135,7 +135,7 @@ SELECT name, status FROM projects ORDER BY name;
 - If SQL says object already exists, run the scripts in the same order again (the schema is mostly idempotent).
 - If a user can sign in but has no role, check `profiles` table for that user ID/email.
 - If Admin screen is missing, log in with a user whose `profiles.role` is `ministry`.
-- **No projects on Dashboard:** Run `schema.sql` then `seed.sql` in Supabase SQL Editor. Ensure Vercel/local `.env` points to the same Supabase project. Click Refresh on the Dashboard.
+- **No projects on Dashboard:** Run `schema.sql` first in Supabase SQL Editor. Then either run `seed.sql` or, as ministry user, click **Bootstrap example projects** on the Dashboard to create the three example projects via API.
 
 ## Environment variables
 
