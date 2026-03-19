@@ -286,6 +286,40 @@ th {
   color: var(--text);
 }
 
+.asset-usage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.asset-usage-card {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: flex-start;
+}
+
+.asset-usage-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.asset-usage-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.asset-usage-explanation {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 @media (max-width: 980px) {
   .shell {
     grid-template-columns: 1fr;
@@ -300,6 +334,10 @@ th {
   .col-6,
   .col-4 {
     grid-column: span 12;
+  }
+
+  .asset-usage-grid {
+    grid-template-columns: 1fr;
   }
 }
 
