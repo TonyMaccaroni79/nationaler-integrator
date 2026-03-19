@@ -10,11 +10,12 @@ import { Audit } from './Audit'
 import { Admin } from './Admin'
 import { ProcessFlow } from './ProcessFlow'
 import { GovernanceDetails } from './GovernanceDetails'
+import { Privacy } from './Privacy'
 import { useAppStore } from './store'
 
-type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'admin' | 'process-flow'
+type Route = 'dashboard' | 'sectors' | 'dmrv' | 'governance' | 'governance-details' | 'mint' | 'audit' | 'admin' | 'process-flow' | 'privacy'
 
-const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'admin', 'process-flow']
+const ROUTES: Route[] = ['dashboard', 'sectors', 'dmrv', 'governance', 'governance-details', 'mint', 'audit', 'admin', 'process-flow', 'privacy']
 
 function normalizeRoute(hash: string): Route {
   const base = hash.replace(/#/, '').split('?')[0]
@@ -52,6 +53,8 @@ function Shell() {
         return <Admin />
       case 'process-flow':
         return <ProcessFlow />
+      case 'privacy':
+        return <Privacy />
       case 'dashboard':
       default:
         return <Dashboard />
@@ -112,6 +115,10 @@ function Shell() {
               >
                 Sign in
               </button>
+              <p className="subtle" style={{ fontSize: 12, marginTop: 8 }}>
+                By signing in you agree to the processing of your account data. See{' '}
+                <a href="#privacy">Data protection</a>.
+              </p>
             </>
           )}
           {state.error ? <span className="badge danger">{state.error}</span> : null}
@@ -142,12 +149,18 @@ function Shell() {
           <a href="#process-flow" className={route === 'process-flow' ? 'active' : ''}>
             Process flow
           </a>
+          <a href="#privacy" className={route === 'privacy' ? 'active' : ''}>
+            Data protection
+          </a>
           {state.role === 'ministry' ? (
             <a href="#admin" className={route === 'admin' ? 'active' : ''}>
               Admin
             </a>
           ) : null}
         </nav>
+        <footer className="footer">
+          <a href="#privacy">Data protection / Datenschutz</a>
+        </footer>
       </aside>
       <main className="main">
         {state.authenticated ? (
@@ -159,12 +172,17 @@ function Shell() {
         ) : null}
         {state.authenticated ? (
           content
+        ) : route === 'privacy' ? (
+          content
         ) : (
           <section className="panel">
             <h2>Sign in required</h2>
             <p className="subtle">
               Use a Supabase user account. Roles are resolved from the <code>profiles</code> table
               (`ministry` or `auditor`).
+            </p>
+            <p className="subtle" style={{ marginTop: 12 }}>
+              <a href="#privacy">Data protection / Datenschutz</a>
             </p>
           </section>
         )}

@@ -147,6 +147,40 @@ SELECT name, status FROM projects ORDER BY name;
 - If Admin screen is missing, log in with a user whose `profiles.role` is `ministry`.
 - **No projects on Dashboard:** Run `schema.sql` first in Supabase SQL Editor. Then either run `seed.sql` or, as ministry user, click **Bootstrap example projects** on the Dashboard to create the three example projects via API.
 
+## Data & Privacy (GDPR / DSGVO)
+
+The application processes personal and project data. For GDPR compliance:
+
+### Data flow
+
+- **User accounts:** Email, auth tokens — stored in Supabase Auth
+- **Profiles:** Role (ministry/auditor) — stored in Supabase `profiles` table
+- **Projects:** Names, dMRV data, permanence scores — Supabase `projects` table
+- **Audit log:** Actions, timestamps, results — Supabase `audit_log` table
+- **Authorizations, tokens:** Supabase tables
+
+Frontend and API requests are served via Vercel; database and auth via Supabase.
+
+### EU hosting
+
+- **Supabase:** Create the project in an EU region (e.g. Frankfurt) in the Supabase dashboard
+- **Vercel:** Set function region to `eu-central-1` (Frankfurt) or `eu-west-1` in project settings
+
+### GDPR measures in this prototype
+
+- Row Level Security (RLS) restricts data access by role
+- Role-based access: only `ministry` can authorize/mint; `auditor` has read-only access
+- This is a prototype for demonstration; no productive use of personal data is intended
+
+### For production use
+
+- Data Processing Agreement (DPA) with Supabase; review Vercel DPA
+- Privacy impact assessment (Datenschutz-Folgenabschätzung) if required
+- Define retention periods and deletion procedures for audit log and project data
+- dMRV data may contain business secrets — access control via RLS is in place
+
+The application includes a **Data protection** page (`#privacy`) with a summary of processed data, purpose, third-party services, and user rights.
+
 ## Environment variables
 
 Create `.env` (or copy from `.env.example`):
