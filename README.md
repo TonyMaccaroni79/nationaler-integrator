@@ -121,9 +121,19 @@ You can keep your existing Supabase project. Deleting it is not required.
 2. Repeat steps from Option A.
 3. Update `.env` values for the new project URL/keys.
 
+### Supabase CLI (optional, for automated setup)
+
+1. Create an access token at [supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens).
+2. Run:
+   ```bash
+   export SUPABASE_ACCESS_TOKEN=your_token
+   npm run supabase:setup
+   ```
+   This links the project, pushes the schema, and runs the seed.
+
 ### Verification
 
-After running `schema.sql` and `seed.sql`, verify in Supabase SQL Editor:
+After running `schema.sql` and `seed.sql` (or `npm run supabase:setup`), verify in Supabase SQL Editor:
 
 ```sql
 SELECT COUNT(*) FROM projects;  -- Expected: 3
