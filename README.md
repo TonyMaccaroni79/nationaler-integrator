@@ -51,6 +51,7 @@ Optional URL hint for screen shares: append `?demo=1` to show a prototype banner
 | 403 on authorize / mint | User is `auditor`; use a `ministry` account. |
 | 403 on ITMO details | Should not occur if schema is current — ITMO details allow any authenticated role. |
 | Empty projects | Run `schema.sql` + `seed.sql` or **Add example projects**. |
+| `Could not find the table 'public.itmo_authorizations' in the schema cache` | DB missing NDC/ITMO tables — run [`supabase/migrations/20260320000000_ndc_itmo_tables.sql`](supabase/migrations/20260320000000_ndc_itmo_tables.sql) in Supabase SQL Editor (or re-run full [`supabase/schema.sql`](supabase/schema.sql)), then retry. |
 | SQL errors on new tables | Run latest `schema.sql` or NDC/ITMO migration once. |
 
 ## Repository structure
