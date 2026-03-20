@@ -52,10 +52,21 @@ export type DmrvValidationResult = {
   issues: string[]
 }
 
+export type NdcItmoSummary = {
+  ndcCompatible: boolean
+  itmoEligible: boolean
+  authorizationType: string
+  maxITMOExport: number
+  adjustmentApplied: boolean
+  adjustmentAmount: number
+  adjustmentYear: number
+}
+
 export type AuthorizeResponse = {
   authorized: boolean
   reason?: string
   governance?: GovernanceDetails
+  ndcItmo?: NdcItmoSummary
 }
 
 export type SectorRule = {

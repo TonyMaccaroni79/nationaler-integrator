@@ -27,6 +27,34 @@ export function Dashboard() {
       </section>
 
       <section className="panel">
+        <h3 style={{ marginTop: 0 }}>Suggested demo flow</h3>
+        <ol className="subtle" style={{ margin: '8px 0 16px', paddingLeft: 20, fontSize: 13, lineHeight: 1.6 }}>
+          <li>
+            <a href="#dashboard">Reset demo</a> (ministry) — then continue below
+          </li>
+          <li>
+            <a href="#process-flow">Process chain</a>
+          </li>
+          <li>
+            <a href="#dmrv">dMRV Validation</a>
+          </li>
+          <li>
+            <a href="#governance">Governance Authorization</a> —{' '}
+            <a href="#governance-details">Governance details</a>
+          </li>
+          <li>
+            <a href="#mint">Minting</a>
+          </li>
+          <li>
+            <a href="#audit">Audit trail</a>
+          </li>
+          <li>
+            <a href="#itmo">ITMO &amp; NDC</a>
+          </li>
+          <li>
+            <a href="#green-finance">Green Finance</a> — <a href="#asset-usage">Asset usage</a>
+          </li>
+        </ol>
         <div className="row" style={{ gap: 10 }}>
           <button type="button" onClick={() => (window.location.hash = '#process-flow')}>
             Show process chain

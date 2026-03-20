@@ -85,6 +85,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (authError) return sendJson(res, 500, { error: authError.message })
 
+  await serverSupabase.from('itmo_authorizations').delete().eq('project_id', projectId)
+  const { error: itmoRowError } = await serverSupabase.from('itmo_authorizations').insert({
+    project_id: projectId,
+    authorization_type: ndcItmo.authorizationType,
+    max_itmo_export: ndcItmo.maxITMOExport,
+    itmo_eligible: ndcItmo.itmoEligible,
+    ndc_compatible: ndcItmo.ndcCompatible,
+  })
+  if (itmoRowError) {
+    return sendJson(res, 500, { error: `itmo_authorizations: ${itmoRowError.message}` })
+  }
+
+  await serverSupabase.from('corresponding_adjustments').delete().eq('project_id', projectId)
+  const { error: adjError } = await serverSupabase.from('corresponding_adjustments').insert({
+    project_id: projectId,
+    adjustment_year: ndcItmo.adjustmentYear,
+    adjustment_amount: ndcItmo.adjustmentAmount,
+    adjustment_applied: ndcItmo.adjustmentApplied,
+  })
+  if (adjError) {
+    return sendJson(res, 500, { error: `corresponding_adjustments: ${adjError.message}` })
+  }
+
   await appendAuditLog(
     projectId,
     'authorize',

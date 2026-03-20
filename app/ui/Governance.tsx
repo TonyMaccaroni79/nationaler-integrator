@@ -68,6 +68,30 @@ export function Governance() {
                 {state.authorization.authorized ? 'authorized' : 'not authorized'}
               </span>
               <p className="subtle">{state.authorization.reason ?? 'No reason provided.'}</p>
+              {state.authorization.ndcItmo ? (
+                <div className="stack" style={{ marginTop: 12 }}>
+                  <h4 style={{ margin: 0, fontSize: 13, color: 'var(--accent)' }}>ITMO &amp; NDC</h4>
+                  <p className="subtle" style={{ fontSize: 12 }}>
+                    <span className={state.authorization.ndcItmo.itmoEligible ? 'badge ok' : 'badge danger'}>
+                      {state.authorization.ndcItmo.itmoEligible ? 'ITMO eligible' : 'ITMO not eligible'}
+                    </span>
+                  </p>
+                  <ul className="subtle" style={{ fontSize: 12, margin: 0, paddingLeft: 18 }}>
+                    <li>NDC compatible: {state.authorization.ndcItmo.ndcCompatible ? 'yes' : 'no'}</li>
+                    <li>Max ITMO export: {state.authorization.ndcItmo.maxITMOExport.toFixed(2)} t CO₂e</li>
+                    <li>Authorization type: {state.authorization.ndcItmo.authorizationType}</li>
+                    <li>
+                      Adjustment:{' '}
+                      {state.authorization.ndcItmo.adjustmentApplied ? 'applied' : 'not applied'} (
+                      {state.authorization.ndcItmo.adjustmentAmount.toFixed(2)} t,{' '}
+                      {state.authorization.ndcItmo.adjustmentYear})
+                    </li>
+                  </ul>
+                  <a href="#itmo" style={{ fontSize: 12 }}>
+                    Open full ITMO &amp; NDC screen →
+                  </a>
+                </div>
+              ) : null}
             </div>
           )}
           {selectedProject ? (

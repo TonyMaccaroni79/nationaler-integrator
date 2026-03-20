@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { requireMinistryRole } from '../lib/authz.js'
+import { requireAuthenticatedUser } from '../lib/authz.js'
 import { checkSectorEligibility } from '../lib/governance.js'
 import { runGovernancePipeline } from '../lib/governancePipeline.js'
 import { runNdcItmoPipeline } from '../lib/ndcItmoPipeline.js'
@@ -11,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return sendJson(res, 405, { error: 'Method not allowed' })
   }
 
-  const auth = await requireMinistryRole(req)
+  const auth = await requireAuthenticatedUser(req)
   if (!auth.ok) return sendJson(res, auth.status ?? 403, { error: auth.error })
 
   const projectId =

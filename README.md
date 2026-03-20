@@ -15,6 +15,43 @@ Deployment targets:
 - **Supabase** (database, auth, storage)
 - **Vercel** (frontend + serverless APIs)
 - **GitHub** (clean project structure)
+- **NDC / ITMO** ([`app/lib/ndcModel.ts`](app/lib/ndcModel.ts), [`app/lib/itmoAuthorization.ts`](app/lib/itmoAuthorization.ts), [`app/api/itmo-details`](app/api/itmo-details.ts))
+- **Additional UI**: Process chain (9 steps), Green Finance, Asset usage, ITMO & NDC (`#itmo`)
+
+## Live demo checklist (Vercel + Supabase)
+
+Before presenting:
+
+1. **Vercel env vars** (Production): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — all set and matching the same Supabase project.
+2. **Supabase SQL**: Run [`supabase/schema.sql`](supabase/schema.sql) (includes NDC/ITMO tables; or run the full migration set including [`supabase/migrations/20260320000000_ndc_itmo_tables.sql`](supabase/migrations/20260320000000_ndc_itmo_tables.sql)).
+3. **Users**: At least one user with `profiles.role = ministry` for authorize, mint, bootstrap, and ITMO persistence; optional `auditor` for read-only paths.
+4. **Data**: Example projects via [`supabase/seed.sql`](supabase/seed.sql) or Dashboard **Add example projects** (ministry).
+5. **Browser**: Hard refresh (e.g. Cmd+Shift+R) so the latest frontend loads.
+
+### Suggested demo flow (moderator)
+
+1. **Reset demo** (ministry) — projects back to `draft` for authorize → mint.  
+2. **Process chain** — end-to-end narrative.  
+3. **dMRV Validation** — sample payload.  
+4. **Governance Authorization** — submit request; note governance + ITMO/NDC summary.  
+5. **Governance details** — full calculation.  
+6. **Minting** — after authorization.  
+7. **Audit trail** — traceability.  
+8. **ITMO & NDC** — NDC linkage (ministry and auditor can view).  
+9. **Green Finance** / **Asset usage** — downstream narrative.
+
+Optional URL hint for screen shares: append `?demo=1` to show a prototype banner in the app.
+
+### Live demo troubleshooting
+
+| Symptom | Likely cause |
+| -------- | ------------- |
+| API returns non-JSON / “Unexpected token” | Missing or wrong `SUPABASE_*` on Vercel; redeploy after fixing env. |
+| 401 on APIs | Not signed in or expired session; sign in again. |
+| 403 on authorize / mint | User is `auditor`; use a `ministry` account. |
+| 403 on ITMO details | Should not occur if schema is current — ITMO details allow any authenticated role. |
+| Empty projects | Run `schema.sql` + `seed.sql` or **Add example projects**. |
+| SQL errors on new tables | Run latest `schema.sql` or NDC/ITMO migration once. |
 
 ## Repository structure
 
@@ -250,8 +287,9 @@ git push -u origin main
 ## Governance flow implemented
 
 - **dMRV validation**: `POST /api/validate-dmrv` validates payloads and returns `valid` + `issues`.
-- **Permanence model**: `app/lib/permanenceModel.ts` computes risk-adjusted permanence for authorization.
-- **Authorization**: `POST /api/authorize` combines dMRV validity, permanence, and sector eligibility.
+- **Modular governance**: [`app/lib/models/`](app/lib/models/), config in [`app/config/`](app/config/).
+- **Authorization**: `POST /api/authorize` runs governance pipeline, NDC/ITMO pipeline, persists `itmo_authorizations` and `corresponding_adjustments` (when DB tables exist), returns `governance` and `ndcItmo` in the JSON body.
+- **ITMO preview**: `GET /api/itmo-details?projectId=` — any authenticated user (`ministry` or `auditor`).
 - **Minting**: `POST /api/mint` only proceeds for authorized projects, then records token issuance.
 - **Audit**: `POST /api/audit` returns timestamped audit records with authorization result, permanence, and dMRV validity.
 
@@ -261,4 +299,60 @@ git push -u origin main
 - **Role separation**: ministry operations separated from auditor oversight
 - **Policy modularity**: validator, permanence model, governance logic isolated in `/app/lib`
 - **Registry readiness**: minting abstracted for later sovereign registry integration
+
+## Path to production (from this prototype)
+
+This section is **non-legal guidance** for planning. Production use of Article 6, ITMOs, NDC accounting, and market-facing instruments requires **institutional decisions, contracts, and counsel**—not only code changes.
+
+### Do you need to throw away the repo?
+
+| Area | Typical approach |
+|------|------------------|
+| **Codebase** | **Evolve**, don’t necessarily restart: the governance-chain idea and modular config stay useful. Expect **major rewrites** of registry linkage, ITMO state machines, and inventory integration. |
+| **Law & governance** | **New formalization**: mandates, authorizations, cooperative approaches with partner states, administrative procedure—not implemented by this app alone. |
+| **Stack (Vercel + Supabase)** | **May remain** after risk assessment, DPA, and EU-hosting requirements; some public-sector setups require **different hosting** (other cloud or on-prem). |
+| **Demo logic** | **Replace** simplified NDC/ITMO models with rules agreed with inventory/Article 6 units; demo seed data is not production data. |
+
+### 1. Legal & institutional
+
+- Clarify **which authority** authorizes what (Article 6.2 cooperative approaches vs other channels); internal responsibilities and **administrative acts** where required.
+- **Bilateral or multilateral agreements** before productive ITMO transfers.
+- Align with **NDC and national GHG inventory** (who books what, when); **corresponding adjustments** must tie to real inventory processes—not only DB mock fields.
+- **Data protection**: DPA, TOM, retention/deletion; dMRV may include **trade secrets**.
+- **Financial markets**: If instruments are marketed to investors or resemble securities, involve **financial regulation** (e.g. MiCA, prospectus rules, national law)—“digital commodity” is not a universal legal category.
+- **Liability & insurance** for miscounting, double counting, or wrongful authorization.
+
+### 2. Article 6 & ITMO granularity (product vs prototype)
+
+- Full **ITMO lifecycle**: state authorization, **unique identifiers**, registry records, **first transfer**, transfer chain, no double counting.
+- **Corresponding adjustments** integrated with the **official inventory system**, not only `corresponding_adjustments` table semantics.
+- Distinguish **Article 6.2 vs 6.4** (and other tools) and scope the product accordingly.
+- **Methodology / baseline governance**: versioned rules, accredited validation where required, dispute and reversal/correction processes.
+
+### 3. Technical architecture
+
+- **Authoritative workflow**: consider stronger patterns (event log, workflow engine) for state transitions that must be audit-proof.
+- **Real registry APIs** replacing mock minting / internal `tokens` only where appropriate to national design.
+- **Identity & access**: e-government ID, mTLS, segregated environments, key management (HSM for high assurance).
+- **Availability & DR**: backups, failover, RTO/RPO suitable for an agency.
+- **Observability**: structured audit of *who* triggered *which* transition; API versioning and **idempotency** for external integrations.
+
+### 4. Data & security
+
+- Migration discipline; **RLS** and optional column-level protection for sensitive payloads.
+- **Service role keys** only on server; never in the browser.
+- Documented **retention** aligned with law.
+
+### 5. Process & quality
+
+- **Four-eyes** or similar controls for production authorization where policy requires it.
+- Load tests, security testing, acceptance with domain experts.
+- Operator training and **incident runbooks**.
+
+### 6. Green Finance / EU Taxonomy
+
+- Treat **separately** from Article 6 ITMO plumbing: taxonomy and CSRD readiness usually need **dedicated assessments or partner bank workflows**, not implied by “minted” alone.
+- Exports/reports for due diligence may matter more than extra UI labels.
+
+For a **live demonstration** of the current build, see **Live demo checklist** and **Suggested demo flow** earlier in this README.
 

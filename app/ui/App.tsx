@@ -31,11 +31,19 @@ function Shell() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [route, setRoute] = useState<Route>(() => normalizeRoute(window.location.hash))
+  const [demoQuery, setDemoQuery] = useState(() => new URLSearchParams(window.location.search).get('demo') === '1')
 
   useEffect(() => {
     const onHashChange = () => setRoute(normalizeRoute(window.location.hash))
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  useEffect(() => {
+    const syncDemo = () => setDemoQuery(new URLSearchParams(window.location.search).get('demo') === '1')
+    syncDemo()
+    window.addEventListener('popstate', syncDemo)
+    return () => window.removeEventListener('popstate', syncDemo)
   }, [])
 
   const content = useMemo(() => {
@@ -181,6 +189,14 @@ function Shell() {
         </footer>
       </aside>
       <main className="main">
+        {state.authenticated ? (
+          <div className={`demo-banner${demoQuery ? ' demo-banner--highlight' : ''}`}>
+            <span>
+              Prototype — not for production.{demoQuery ? ' Demo mode.' : ''}{' '}
+              <a href="#privacy">Data protection</a>.
+            </span>
+          </div>
+        ) : null}
         {state.authenticated ? (
           <div className="main-topbar">
             <button type="button" className="back-button" onClick={goBack}>
