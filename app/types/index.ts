@@ -67,6 +67,8 @@ export type AuthorizeResponse = {
   reason?: string
   governance?: GovernanceDetails
   ndcItmo?: NdcItmoSummary
+  /** Set when ITMO/NDC tables are missing in Supabase — authorize still completes. */
+  persistenceWarnings?: string[]
 }
 
 export type SectorRule = {

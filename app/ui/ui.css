@@ -219,6 +219,12 @@ button:disabled {
   color: var(--ok);
 }
 
+.badge.warn {
+  background: rgba(234, 179, 8, 0.2);
+  color: #ca8a04;
+  border: 1px solid rgba(234, 179, 8, 0.45);
+}
+
 .badge.danger {
   color: var(--danger);
 }

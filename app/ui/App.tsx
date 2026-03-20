@@ -139,6 +139,15 @@ function Shell() {
             </>
           )}
           {state.error ? <span className="badge danger">{state.error}</span> : null}
+          {state.authorization?.persistenceWarnings?.length ? (
+            <div className="stack" style={{ gap: 6 }}>
+              {state.authorization.persistenceWarnings.map((w) => (
+                <span key={w} className="badge warn" style={{ whiteSpace: 'normal', fontSize: 11 }}>
+                  {w}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <nav className="nav">

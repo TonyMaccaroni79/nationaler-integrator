@@ -5,6 +5,7 @@ import { checkSectorEligibility } from '../lib/governance.js'
 import { runGovernancePipeline } from '../lib/governancePipeline.js'
 import { runNdcItmoPipeline } from '../lib/ndcItmoPipeline.js'
 import { sendJson } from '../lib/http.js'
+import { isMissingRelationError } from '../lib/postgrestErrors.js'
 import { serverSupabase } from '../lib/serverSupabase.js'
 
 function parseBody<T>(req: VercelRequest): T | null {
@@ -85,27 +86,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (authError) return sendJson(res, 500, { error: authError.message })
 
-  await serverSupabase.from('itmo_authorizations').delete().eq('project_id', projectId)
-  const { error: itmoRowError } = await serverSupabase.from('itmo_authorizations').insert({
-    project_id: projectId,
-    authorization_type: ndcItmo.authorizationType,
-    max_itmo_export: ndcItmo.maxITMOExport,
-    itmo_eligible: ndcItmo.itmoEligible,
-    ndc_compatible: ndcItmo.ndcCompatible,
-  })
-  if (itmoRowError) {
-    return sendJson(res, 500, { error: `itmo_authorizations: ${itmoRowError.message}` })
+  const persistenceWarnings: string[] = []
+  const itmoMigrationHint =
+    'Run supabase/migrations/20260320000000_ndc_itmo_tables.sql (or full schema.sql) in the Supabase SQL Editor, then authorize again to persist ITMO/NDC rows.'
+
+  const delItmo = await serverSupabase.from('itmo_authorizations').delete().eq('project_id', projectId)
+  if (delItmo.error) {
+    if (isMissingRelationError(delItmo.error)) {
+      persistenceWarnings.push(`itmo_authorizations: ${delItmo.error.message}. ${itmoMigrationHint}`)
+    } else {
+      return sendJson(res, 500, { error: `itmo_authorizations: ${delItmo.error.message}` })
+    }
+  } else {
+    const { error: itmoRowError } = await serverSupabase.from('itmo_authorizations').insert({
+      project_id: projectId,
+      authorization_type: ndcItmo.authorizationType,
+      max_itmo_export: ndcItmo.maxITMOExport,
+      itmo_eligible: ndcItmo.itmoEligible,
+      ndc_compatible: ndcItmo.ndcCompatible,
+    })
+    if (itmoRowError) {
+      if (isMissingRelationError(itmoRowError)) {
+        persistenceWarnings.push(`itmo_authorizations: ${itmoRowError.message}. ${itmoMigrationHint}`)
+      } else {
+        return sendJson(res, 500, { error: `itmo_authorizations: ${itmoRowError.message}` })
+      }
+    }
   }
 
-  await serverSupabase.from('corresponding_adjustments').delete().eq('project_id', projectId)
-  const { error: adjError } = await serverSupabase.from('corresponding_adjustments').insert({
-    project_id: projectId,
-    adjustment_year: ndcItmo.adjustmentYear,
-    adjustment_amount: ndcItmo.adjustmentAmount,
-    adjustment_applied: ndcItmo.adjustmentApplied,
-  })
-  if (adjError) {
-    return sendJson(res, 500, { error: `corresponding_adjustments: ${adjError.message}` })
+  if (persistenceWarnings.length === 0) {
+    const delAdj = await serverSupabase.from('corresponding_adjustments').delete().eq('project_id', projectId)
+    if (delAdj.error) {
+      if (isMissingRelationError(delAdj.error)) {
+        persistenceWarnings.push(`corresponding_adjustments: ${delAdj.error.message}. ${itmoMigrationHint}`)
+      } else {
+        return sendJson(res, 500, { error: `corresponding_adjustments: ${delAdj.error.message}` })
+      }
+    } else {
+      const { error: adjError } = await serverSupabase.from('corresponding_adjustments').insert({
+        project_id: projectId,
+        adjustment_year: ndcItmo.adjustmentYear,
+        adjustment_amount: ndcItmo.adjustmentAmount,
+        adjustment_applied: ndcItmo.adjustmentApplied,
+      })
+      if (adjError) {
+        if (isMissingRelationError(adjError)) {
+          persistenceWarnings.push(`corresponding_adjustments: ${adjError.message}. ${itmoMigrationHint}`)
+        } else {
+          return sendJson(res, 500, { error: `corresponding_adjustments: ${adjError.message}` })
+        }
+      }
+    }
   }
 
   await appendAuditLog(
@@ -117,6 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   return sendJson(res, 200, {
     authorized: result.decision.authorized,
     reason,
+    ...(persistenceWarnings.length ? { persistenceWarnings } : {}),
     governance: {
       baseline: result.baseline,
       riskFactor: result.riskFactor,

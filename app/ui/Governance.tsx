@@ -55,6 +55,15 @@ export function Governance() {
               <span className="badge danger">Only ministry role can authorize projects.</span>
             ) : null}
             {state.error ? <span className="badge danger">{state.error}</span> : null}
+            {state.authorization?.persistenceWarnings?.length ? (
+              <div className="stack" style={{ gap: 6 }}>
+                {state.authorization.persistenceWarnings.map((w) => (
+                  <span key={w} className="badge warn" style={{ whiteSpace: 'normal', textAlign: 'left' }}>
+                    {w}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -68,6 +77,15 @@ export function Governance() {
                 {state.authorization.authorized ? 'authorized' : 'not authorized'}
               </span>
               <p className="subtle">{state.authorization.reason ?? 'No reason provided.'}</p>
+              {state.authorization.persistenceWarnings?.length ? (
+                <div className="stack" style={{ gap: 6, marginTop: 8 }}>
+                  {state.authorization.persistenceWarnings.map((w) => (
+                    <span key={w} className="badge warn" style={{ whiteSpace: 'normal', fontSize: 12 }}>
+                      {w}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
               {state.authorization.ndcItmo ? (
                 <div className="stack" style={{ marginTop: 12 }}>
                   <h4 style={{ margin: 0, fontSize: 13, color: 'var(--accent)' }}>ITMO &amp; NDC</h4>
